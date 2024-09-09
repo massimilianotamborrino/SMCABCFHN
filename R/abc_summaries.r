@@ -13,8 +13,6 @@ NULL
 abc_summaries<-function(x,extra_summaries,whichsummarymodelbased) {
 if(extra_summaries[[1]]=='model-based'|extra_summaries[[1]]=='mixed') return(FHN_abc_summaries_X(x,extra_summaries[[2]],extra_summaries[[3]]))
   else if (extra_summaries[[1]]=='classic') return(abc_summaries_classic(x))
-  else if (extra_summaries[[1]]=='mixedsum') return(matrix(c(abc_summaries_classic(x),FHN_abc_summaries(extra_summaries[[2]],x,extra_summaries[[3]],
-                                             extra_summaries[[4]],extra_summaries[[5]],extra_summaries[[6]],extra_summaries[[7]],extra_summaries[[8]],whichsummarymodelbased)),ncol=1))
     else if (extra_summaries[[1]]=='IAEWass') {
       return(FHN_abc_summaries(extra_summaries[[2]],x,extra_summaries[[3]],extra_summaries[[4]],extra_summaries[[5]],extra_summaries[[6]],extra_summaries[[7]],extra_summaries[[8]],whichsummarymodelbased));
     }

@@ -23,7 +23,7 @@ NULL
 #'@export
 #'
 SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_sim, summ_weights, numparticles, alpha, sampling,
-                                                        attempt, folder, we,whichsummarymodelbased, whichprior = 1,subsamplingby=1)
+                                                        attempt, folder, we,whichsummarymodelbased, whichprior = 'unif',subsamplingby=1)
 {
   #% THE OBSERVED SUMMARIES - Code for the FHN
   type_sum<-extra_summaries[[1]]

@@ -11,8 +11,8 @@ NULL
 #'@return Invariant spectral density and invariant density
 #'@export
 abc_summaries<-function(x,extra_summaries,whichsummarymodelbased) {
-if(extra_summaries[[1]]=='model-based'|extra_summaries[[1]]=='mixed') return(FHN_abc_summaries_X(x,extra_summaries[[2]],extra_summaries[[3]]))
-  else if (extra_summaries[[1]]=='classic') return(abc_summaries_classic(x))
+if(extra_summaries[[1]]=='model-based') return(FHN_abc_summaries_X(x,extra_summaries[[2]],extra_summaries[[3]]))
+  else if (extra_summaries[[1]]=='canonical') return(abc_summaries_canonical(x))
     else if (extra_summaries[[1]]=='IAEWass') {
       return(FHN_abc_summaries(extra_summaries[[2]],x,extra_summaries[[3]],extra_summaries[[4]],extra_summaries[[5]],extra_summaries[[6]],extra_summaries[[7]],extra_summaries[[8]],whichsummarymodelbased));
     }
@@ -75,13 +75,13 @@ FHN_abc_summaries<-function(X,Y,span_val,Lsupport,stepP,stepD,specX,invDensX,whi
   return(d_vec)
 }
 
-#'@rdname abc_summaries_classic
-#'@title abc_summaries_classic
+#'@rdname abc_summaries_canonical
+#'@title abc_summaries_canonical
 #'@description Summaries
 #'@param x Matrix with observations;
 #'@return Summaries
 #'@export
-abc_summaries_classic<-function(x){
+abc_summaries_canonical<-function(x){
   d<-diff(x)
 matrix(c(mean(x),var(x),skewness(x),kurtosis(x),acf(x,lag.max=5,plot=F)$acf[-1],mean(d),var(d),skewness(d),kurtosis(d),acf(d,lag.max=5,plot=F)$acf[-1]),ncol=1)
 }

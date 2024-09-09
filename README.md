@@ -9,9 +9,9 @@ Trajectories of the FHN model are simulated using the structure-preserving split
 The R-package is written and maintained by Massimiliano Tamborrino (firstname dot secondname at warwick.ac.uk).
 
 # What can you find in the package
-In this package, we provide the code for the SMC-ABC algorithm using Gaussian kernel proposal, either the canonical version ('standard') or its optimased version ('olcml'). We also accommodate the code for having both classic ('classic') and "model-based" ('model-based') summary statistics.
+In this package, we provide the code for the SMC-ABC algorithm using Gaussian kernel proposal, either the canonical version ('standard') or its optimased version ('olcml'). We also accommodate the code for having both canonical ('canonical') and "model-based" ('model-based') summary statistics.
 
-The main routine is "SMCABCFHN_numbersim.R", which performs SMC-ABC with automatically decreasing tolerance levels, and user-specified: 1) sampler ('standard' or 'olcm'); 2) summary statistics ('classic' or 'model-based'); 3) computational budget, i.e., total number of model simulations to run. 
+The main routine is "SMCABCFHN_numbersim.R", which performs SMC-ABC with automatically decreasing tolerance levels, and user-specified: 1) prior ('unif','lognormal','exp'); 2) sampler ('standard' or 'olcm'); 3) summary statistics ('canonical' or 'model-based'); 4) computational budget, i.e., total number of model simulations to run. 
 
 # How to install the package
 * Tools/Install packages/ select the source folder

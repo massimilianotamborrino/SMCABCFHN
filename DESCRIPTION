@@ -1,0 +1,14 @@
+Package: guidedABCFHN
+Type: Package
+Title: Guided Sequential (SMC and SIS) ABC for the inference for the FHN model
+Version: 0.1.0
+Author: M. Tamborrino
+Maintainer: M. Tamborrino <massimiliano.tamborrino@warwick.ac.uk>
+Description: Guided sequential ABC methods for the FHN model when only the membrane voltage is observed.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.1.0), Rcpp,triangle,extraDistr,foreach,mvnfast
+Imports: pracma, Matrix, copula, moments,transport
+LinkingTo: Rcpp
+RoxygenNote: 7.2.3

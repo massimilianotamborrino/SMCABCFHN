@@ -8,7 +8,6 @@ NULL
 #'@param data observed data
 #'@param extra Any additional coefficients/vector of coefficients which may be need to simulate from the model
 #'@param extra_summaries Any additional coefficients/vector needed to compute the summaries
-#'@param parmask set of 0/1 to see which parameters have to be estimated
 #'@param ABCthreshold Initial value for the threshold for the guided approach
 #'@param number_sim Total number of simulations, after which we stop the algorithm
 #'@param summ_weights vector with weights of the summaries computed from a pilot study
@@ -23,7 +22,7 @@ NULL
 #'@param subsamplingby every how many simulated points the observation should be taken. The default=1, i.e., no subsampling
 #'@export
 #'
-SMCABC_numbersim<- function (data, extra, extra_summaries, parmask, ABCthreshold, number_sim, summ_weights, numparticles, alpha, sampling,
+SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_sim, summ_weights, numparticles, alpha, sampling,
                                                         attempt, folder, we,whichsummarymodelbased, whichprior = 1,subsamplingby=1)
 {
   #% THE OBSERVED SUMMARIES - Code for the FHN
@@ -37,7 +36,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, parmask, ABCthreshold
     }
 
   #####
-  nfreepar <- sum(parmask); # % the number of parameters to be inferred
+  nfreepar <- 4 # % the number of parameters to be inferred
   ABCdraws <- matrix(0,nrow=nfreepar,ncol=numparticles); #% will store accepted parameters (for 1 iteration only, not all)
   nsummaries <- length(summobs); #% the number of summary statistics
   distance_accepted <- matrix(0,nrow=1,ncol=numparticles); #% this is only for the olcm proposal
@@ -53,7 +52,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, parmask, ABCthreshold
     while(distance >= ABCthreshold & numproposals<number_sim){
       numproposals <- numproposals +1;
       theta <-  problemprior(-1,1,whichprior);# % propose from the prior
-      bigtheta <- theta# param_unmask(theta,parmask,parbase); % in this problem bigtheta <- theta. Don't bother
+      bigtheta <- theta
       simdata <- model(bigtheta,extra); #// simulate from the model
       simdata<- simdata[seq(1,length(simdata),by=subsamplingby)]
       simsumm <- abc_summaries(simdata,extra_summaries_ref,whichsummarymodelbased);# //% summaries from simdata
@@ -166,7 +165,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, parmask, ABCthreshold
         prior <- problemprior(theta,0,whichprior); #% evaluate prior
         if(prior==0) numproposals0<-numproposals0+1
         if(prior!=0){
-          bigtheta <- theta#param_unmask(theta,parmask,parbase); % for this problem bigtheta <- theta
+          bigtheta <- theta
           simdata <- model(bigtheta,extra); #// simulate from the model
           simdata<- simdata[seq(1,length(simdata),by=subsamplingby)]
           simsumm <- abc_summaries(simdata,extra_summaries_ref,whichsummarymodelbased);# //% summaries from simdata

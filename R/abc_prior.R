@@ -11,7 +11,8 @@ NULL
 #'@param whichprior 1 uniform, 2 lognormal, 3 exponential
 #'@return Simulation of observations from all models (for draw=1) or pdf of the priors (for draw=0), returned as vector;
 #'@export
-problemprior<-function(theta,draw,whichprior=1) {
- {if(whichprior==1) {return(FHN_prior_(theta,draw));}
-  else  {return(FHN_prior2_(theta,draw));}}
+problemprior<-function(theta,draw,whichprior='unif') {
+ {if(whichprior=='unif') {return(FHN_prior_(theta,draw));}
+  else if(whichprior=='lognormal') {return(FHN_prior2_(theta,draw));}
+   else return(FHN_prior3_(theta,draw))}
 }

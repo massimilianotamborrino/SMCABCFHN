@@ -10,39 +10,62 @@ NumericMatrix my_fun(int N, NumericVector mu,NumericMatrix Sigma){
 };
 
 
+// FHN_prior3_ computes the pdf of the exponential prior (if draw=0) or sample from it (if draw=1)
+// Input:  - theta, needed only if draw=0 to compute the corresponding pdf
+// Output: - out, pdf of the exponential prior (if draw=0) or sample from it (if draw=1)
+
 // [[Rcpp::export]]
-NumericVector FHN_prior2_(NumericVector theta,int draw){
+NumericVector FHN_prior3_(NumericVector theta,int draw){
   double t1,t2,t3,t4;
-  // Returns the product of independent priors
-  // Input:  - theta, the vector of parameters to be estimated
-  // Output: - out, the product of the prior distributions set for each parameter.
-  //                possibly multiplied with a Jacobian for transformations
-  //                from log-parameter to parameter
   if(draw == 0){
     NumericVector out=(1);
     t1 = theta[0];
     t2 = theta[1];
     t3 = theta[2];
     t4 = theta[3];
-    out= R::dlnorm(t1,1,1,FALSE)*R::dlnorm(t2-t1/4,1,1,FALSE)*R::dlnorm(t3,1,1,FALSE)*R::dlnorm(t4,1,1,FALSE);
+    out= R::dexp(t1,1/3,FALSE)*R::dexp(t2,2,FALSE)*R::dexp(t3,2,FALSE)*R::dexp(t4,1,FALSE);
     return(out);}
   else{
     NumericVector out(4); // Here NDIM=4
-    out[0] = rlnorm(1,1,1)[0];
-    out[1] = out[0]+rlnorm(1,1,1)[0];
-    out[2] = rlnorm(1,1,1)[0];
-    out[3] = rlnorm(1,1,1)[0];
+    out[0] = rexp(1,1/3)[0];
+    out[1] = rexp(1,2)[0];
+    out[2] = rexp(1,2)[0];
+    out[3] = rexp(1,1)[0];
     return(out);
   }}
+
+
+// FHN_prior2_ computes the pdf of the lognormal prior (if draw=0) or sample from it (if draw=1)
+// Input:  - theta, needed only if draw=0 to compute the corresponding pdf
+// Output: - out, pdf of the lognormal prior (if draw=0) or sample from it (if draw=1)
+
+// [[Rcpp::export]]
+NumericVector FHN_prior2_(NumericVector theta,int draw){
+  double t1,t2,t3,t4;
+  if(draw == 0){
+    NumericVector out=(1);
+    t1 = theta[0];
+    t2 = theta[1];
+    t3 = theta[2];
+    t4 = theta[3];
+    out= R::dlnorm(t1,0,1,FALSE)*R::dlnorm(t2,0,0.5,FALSE)*R::dlnorm(t3,0,1,FALSE)*R::dlnorm(t4,0,0.75,FALSE);
+    return(out);}
+  else{
+    NumericVector out(4); // Here NDIM=4
+    out[0] = rlnorm(1,0,1)[0];
+    out[1] = rlnorm(1,0,0.5)[0];
+    out[2] = rlnorm(1,0,1)[0];
+    out[3] = rlnorm(1,0,0.75)[0];
+    return(out);
+  }}
+
+// FHN_prior_ computes the pdf of the uniform prior (if draw=0) or sample from it (if draw=1)
+// Input:  - theta, needed only if draw=0 to compute the corresponding pdf
+// Output: - out, pdf of the uniform prior (if draw=0) or sample from it (if draw=1)
 
 // [[Rcpp::export]]
 NumericVector FHN_prior_(NumericVector theta,int draw){
   double t1,t2,t3,t4;
-  // Returns the product of independent priors
-  // Input:  - theta, the vector of parameters to be estimated
-  // Output: - out, the product of the prior distributions set for each parameter.
-  //                possibly multiplied with a Jacobian for transformations
-  //                from log-parameter to parameter
   if(draw == 0){
     NumericVector out=(1);
     t1 = theta[0];

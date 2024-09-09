@@ -8,7 +8,6 @@ SMCABC_numbersim(
   data,
   extra,
   extra_summaries,
-  parmask,
   ABCthreshold,
   number_sim,
   summ_weights,
@@ -29,8 +28,6 @@ SMCABC_numbersim(
 \item{extra}{Any additional coefficients/vector of coefficients which may be need to simulate from the model}
 
 \item{extra_summaries}{Any additional coefficients/vector needed to compute the summaries}
-
-\item{parmask}{set of 0/1 to see which parameters have to be estimated}
 
 \item{ABCthreshold}{Initial value for the threshold for the guided approach}
 

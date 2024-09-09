@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // my_fun
 NumericMatrix my_fun(int N, NumericVector mu, NumericMatrix Sigma);
-RcppExport SEXP _guidedABCFHN_my_fun(SEXP NSEXP, SEXP muSEXP, SEXP SigmaSEXP) {
+RcppExport SEXP _SMCABCFHN_my_fun(SEXP NSEXP, SEXP muSEXP, SEXP SigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,7 +25,7 @@ END_RCPP
 }
 // FHN_prior2_
 NumericVector FHN_prior2_(NumericVector theta, int draw);
-RcppExport SEXP _guidedABCFHN_FHN_prior2_(SEXP thetaSEXP, SEXP drawSEXP) {
+RcppExport SEXP _SMCABCFHN_FHN_prior2_(SEXP thetaSEXP, SEXP drawSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -37,7 +37,7 @@ END_RCPP
 }
 // FHN_prior_
 NumericVector FHN_prior_(NumericVector theta, int draw);
-RcppExport SEXP _guidedABCFHN_FHN_prior_(SEXP thetaSEXP, SEXP drawSEXP) {
+RcppExport SEXP _SMCABCFHN_FHN_prior_(SEXP thetaSEXP, SEXP drawSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,7 +49,7 @@ END_RCPP
 }
 // FHN_model_
 NumericMatrix FHN_model_(NumericVector theta, double delta, NumericVector X0, int N);
-RcppExport SEXP _guidedABCFHN_FHN_model_(SEXP thetaSEXP, SEXP deltaSEXP, SEXP X0SEXP, SEXP NSEXP) {
+RcppExport SEXP _SMCABCFHN_FHN_model_(SEXP thetaSEXP, SEXP deltaSEXP, SEXP X0SEXP, SEXP NSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -63,7 +63,7 @@ END_RCPP
 }
 // FHN_model_check_
 List FHN_model_check_(NumericVector theta, double delta, NumericVector X0, int N);
-RcppExport SEXP _guidedABCFHN_FHN_model_check_(SEXP thetaSEXP, SEXP deltaSEXP, SEXP X0SEXP, SEXP NSEXP) {
+RcppExport SEXP _SMCABCFHN_FHN_model_check_(SEXP thetaSEXP, SEXP deltaSEXP, SEXP X0SEXP, SEXP NSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -77,15 +77,15 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_guidedABCFHN_my_fun", (DL_FUNC) &_guidedABCFHN_my_fun, 3},
-    {"_guidedABCFHN_FHN_prior2_", (DL_FUNC) &_guidedABCFHN_FHN_prior2_, 2},
-    {"_guidedABCFHN_FHN_prior_", (DL_FUNC) &_guidedABCFHN_FHN_prior_, 2},
-    {"_guidedABCFHN_FHN_model_", (DL_FUNC) &_guidedABCFHN_FHN_model_, 4},
-    {"_guidedABCFHN_FHN_model_check_", (DL_FUNC) &_guidedABCFHN_FHN_model_check_, 4},
+    {"_SMCABCFHN_my_fun", (DL_FUNC) &_SMCABCFHN_my_fun, 3},
+    {"_SMCABCFHN_FHN_prior2_", (DL_FUNC) &_SMCABCFHN_FHN_prior2_, 2},
+    {"_SMCABCFHN_FHN_prior_", (DL_FUNC) &_SMCABCFHN_FHN_prior_, 2},
+    {"_SMCABCFHN_FHN_model_", (DL_FUNC) &_SMCABCFHN_FHN_model_, 4},
+    {"_SMCABCFHN_FHN_model_check_", (DL_FUNC) &_SMCABCFHN_FHN_model_check_, 4},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_guidedABCFHN(DllInfo *dll) {
+RcppExport void R_init_SMCABCFHN(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

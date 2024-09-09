@@ -1,4 +1,4 @@
-#' @useDynLib guidedABCFHN
+#' @useDynLib SMCABCFHN
 #' @importFrom Rcpp sourceCpp
 NULL
 
@@ -12,7 +12,7 @@ NULL
 #'@return ABC distance for the given summaries
 #'@export
 abc_distance<-function(type_sum,summaries,summ_weights,weight) {
-  if(type_sum=='classic'|type_sum=='mixed') return(sqrt(sum(summaries/diag(summ_weights)* summaries)))
+  if(type_sum=='classic') return(sqrt(sum(summaries/diag(summ_weights)* summaries)))
   else if (type_sum=='model-based') return(summaries[1,1]+weight*summaries[1,2])
   }
 

@@ -1,4 +1,4 @@
-#' @useDynLib guidedABCFHN
+#' @useDynLib SMCABCFHN
 #' @importFrom Rcpp sourceCpp
 NULL
 

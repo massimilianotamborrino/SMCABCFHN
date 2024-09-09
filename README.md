@@ -1,6 +1,6 @@
 # SMCABCFHN
 R package for the SMC-ABC inference for the FHN model proposed in
-[1] A. Samson, M. Tamborrino, I. Tubikanec. Inference for the stochastic FitzHugh-Nagumo model from real action potential data via approximate Bayesian computation. Preprint at ArXiv:2405.17972
+[1] A. Samson, M. Tamborrino, I. Tubikanec. Inference for the stochastic FitzHugh-Nagumo model from real action potential data via approximate Bayesian computation. Preprint at ArXiv:2405.17972 https://arxiv.org/abs/2405.17972
 
 The R-package is written and maintained by Massimiliano Tamborrino (firstname dot secondname at warwick.ac.uk).
 

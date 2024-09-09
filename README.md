@@ -13,7 +13,7 @@ The main routine is "SMCABCFHN_numbersim.R", which performs SMC-ABC with automat
 * Tools/Install packages/ select the source folder
 *To update The simplest way is to do it via devtools, using devtools::install_github("massimilianotamborrino/SMCABCFHN")
 
-# Output files of "abc_sequential_fixed_threshold" and "abc_sequential_varying_threshold"
+# Output files of "SMCABCFHN_numbersim.R"
 The output files (see below) will be saved in the user-specified folder, and will contain information on iteration-stage (t) and attempt. 
 
 Output files: The input "folder" is the name of the folder where you want your results to be stored. The whole path to access to the folder can be given as input. That folder will contain many files upon completion of a run. Here is a description:

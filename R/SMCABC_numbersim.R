@@ -18,7 +18,7 @@ NULL
 #'@param folder specify the folder where the results are going to be saved in
 #'@param we weights to scale the model-based summaries
 #'@param whichsummarymodelbased specify whether to consider IAEspectrum, IAE density, Wass density, Wass spectrum
-#'@param whichprior 1 for uniform, 2 for lognormal priors
+#'@param whichprior choose between 'unif','lognormal' and and 'exp'
 #'@param subsamplingby every how many simulated points the observation should be taken. The default=1, i.e., no subsampling
 #'@export
 #'

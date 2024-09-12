@@ -7,13 +7,13 @@
 abc_distance(type_sum, summaries, summ_weights, weight)
 }
 \arguments{
-\item{type_sum}{choose between classic, model based and mixed}
+\item{type_sum}{choose between canonical and structure-based}
 
 \item{summaries}{vector of summaries}
 
 \item{summ_weights}{vector with weights of the summaries computed from a pilot study}
 
-\item{weight}{weights for the model-based summaries}
+\item{weight}{weights for the structure-based summaries}
 }
 \value{
 ABC distance for the given summaries

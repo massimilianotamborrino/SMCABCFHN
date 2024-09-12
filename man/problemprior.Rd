@@ -4,7 +4,7 @@
 \alias{problemprior}
 \title{problemprior}
 \usage{
-problemprior(theta, draw, whichprior = 1)
+problemprior(theta, draw, whichprior = "unif")
 }
 \arguments{
 \item{theta}{Parameter Vector;}
@@ -12,7 +12,7 @@ problemprior(theta, draw, whichprior = 1)
 \item{draw}{Draw=0 if we want to compute the product of the pdfs of the priors
 Draw =1 if we want to sample from the priors}
 
-\item{whichprior}{1 uniform, 2 lognormal}
+\item{whichprior}{1 uniform, 2 lognormal, 3 exponential}
 }
 \value{
 Simulation of observations from all models (for draw=1) or pdf of the priors (for draw=0), returned as vector;

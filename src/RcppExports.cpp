@@ -23,6 +23,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// FHN_prior3_
+NumericVector FHN_prior3_(NumericVector theta, int draw);
+RcppExport SEXP _SMCABCFHN_FHN_prior3_(SEXP thetaSEXP, SEXP drawSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< int >::type draw(drawSEXP);
+    rcpp_result_gen = Rcpp::wrap(FHN_prior3_(theta, draw));
+    return rcpp_result_gen;
+END_RCPP
+}
 // FHN_prior2_
 NumericVector FHN_prior2_(NumericVector theta, int draw);
 RcppExport SEXP _SMCABCFHN_FHN_prior2_(SEXP thetaSEXP, SEXP drawSEXP) {
@@ -78,6 +90,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SMCABCFHN_my_fun", (DL_FUNC) &_SMCABCFHN_my_fun, 3},
+    {"_SMCABCFHN_FHN_prior3_", (DL_FUNC) &_SMCABCFHN_FHN_prior3_, 2},
     {"_SMCABCFHN_FHN_prior2_", (DL_FUNC) &_SMCABCFHN_FHN_prior2_, 2},
     {"_SMCABCFHN_FHN_prior_", (DL_FUNC) &_SMCABCFHN_FHN_prior_, 2},
     {"_SMCABCFHN_FHN_model_", (DL_FUNC) &_SMCABCFHN_FHN_model_, 4},

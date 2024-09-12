@@ -16,7 +16,7 @@ NULL
 #'@param sampling specify the chosen samplers. The options are standard or olcm
 #'@param attempt number of iteration
 #'@param folder specify the folder where the results are going to be saved in
-#'@param we weights to scale the model-based summaries
+#'@param we weights to scale the structure-based summaries
 #'@param whichsummarymodelbased specify whether to consider IAEspectrum, IAE density, Wass density, Wass spectrum
 #'@param whichprior choose between 'unif','lognormal' and and 'exp'
 #'@param subsamplingby every how many simulated points the observation should be taken. The default=1, i.e., no subsampling
@@ -31,7 +31,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
   Lsupport<-extra_summaries[[3]]
   extra_summaries_ref<-extra_summaries
   summobs<-abc_summaries(data,extra_summaries_ref);
-  { if(type_sum=='model-based'){extra_summaries_ref<-list('IAEWass',data,span_val,Lsupport,summobs[[1]],summobs[[2]],summobs[[3]],summobs[[4]])
+  { if(type_sum=='structure-based'){extra_summaries_ref<-list('IAEWass',data,span_val,Lsupport,summobs[[1]],summobs[[2]],summobs[[3]],summobs[[4]])
   summobs<-abc_summaries(data,extra_summaries_ref,whichsummarymodelbased)}
     }
 
@@ -44,6 +44,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
   #% initialization: t is the iteration counter
   t <- 1;
   numproposals0<-0
+  numproposalsneg<-0
   tic()   #% This will  count the seconds required to obtain the desired number of accepted particles for each iteration
   RES<-foreach(success = 1:numparticles,.combine='rbind',.packages='SMCABCFHN') %dopar% {
     distance<-ABCthreshold+1
@@ -162,6 +163,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
           #    % the above covariance is not "global" but is instead specific for the sampled particle
           theta <- rmvn(1,ABCdraws_old[,index],cov_olcm)
         }
+        if(min(theta)<0) numproposalsneg<-numproposalsneg+1
         prior <- problemprior(theta,0,whichprior); #% evaluate prior
         if(prior==0) numproposals0<-numproposals0+1
         if(prior!=0){
@@ -188,7 +190,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       #  weights[success] <- prior /dens; TO GET
       #  ABCdraws[,success] <- theta; TO GET
       if(dens==0) return(print('error'))
-      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0)
+      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg)
     }
     eval_time <- toc()
 
@@ -198,6 +200,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     simsumm_all<-matrix(as.numeric(unlist(RES2[,4])),nrow=nsummaries)
     weights<-matrix(as.numeric(unlist(RES2[,5])),ncol=numparticles);
     numproposals0<-sum(unlist(RES2[,6]))
+    numproposalsneg<-sum(unlist(RES2[,7]))
     rm(RES2)
 
     totnumproposals<- totnumproposals+numproposals
@@ -211,6 +214,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     write.table(ABCdraws,file=sprintf('%s/ABCdraws_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposals,file=sprintf('%s/numproposals_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposals0,file=sprintf('%s/numproposals0_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
+    write.table(numproposalsneg,file=sprintf('%s/numproposalsneg_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(normweights,file=sprintf('%s/normweights_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
 
     ABCthreshold_temp <- quantile(distance_accepted,alpha/100);

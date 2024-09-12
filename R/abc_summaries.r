@@ -11,7 +11,7 @@ NULL
 #'@return Invariant spectral density and invariant density
 #'@export
 abc_summaries<-function(x,extra_summaries,whichsummarymodelbased) {
-if(extra_summaries[[1]]=='model-based') return(FHN_abc_summaries_X(x,extra_summaries[[2]],extra_summaries[[3]]))
+if(extra_summaries[[1]]=='structure-based') return(FHN_abc_summaries_X(x,extra_summaries[[2]],extra_summaries[[3]]))
   else if (extra_summaries[[1]]=='canonical') return(abc_summaries_canonical(x))
     else if (extra_summaries[[1]]=='IAEWass') {
       return(FHN_abc_summaries(extra_summaries[[2]],x,extra_summaries[[3]],extra_summaries[[4]],extra_summaries[[5]],extra_summaries[[6]],extra_summaries[[7]],extra_summaries[[8]],whichsummarymodelbased));

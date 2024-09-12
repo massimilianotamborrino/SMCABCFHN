@@ -18,7 +18,7 @@ SMCABC_numbersim(
   folder,
   we,
   whichsummarymodelbased,
-  whichprior = 1,
+  whichprior = "unif",
   subsamplingby = 1
 )
 }
@@ -45,11 +45,11 @@ SMCABC_numbersim(
 
 \item{folder}{specify the folder where the results are going to be saved in}
 
-\item{we}{weights to scale the model-based summaries}
+\item{we}{weights to scale the structure-based summaries}
 
 \item{whichsummarymodelbased}{specify whether to consider IAEspectrum, IAE density, Wass density, Wass spectrum}
 
-\item{whichprior}{1 for uniform, 2 for lognormal priors}
+\item{whichprior}{choose between 'unif','lognormal' and and 'exp'}
 
 \item{subsamplingby}{every how many simulated points the observation should be taken. The default=1, i.e., no subsampling}
 }

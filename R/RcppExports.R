@@ -5,6 +5,10 @@ my_fun <- function(N, mu, Sigma) {
     .Call(`_SMCABCFHN_my_fun`, N, mu, Sigma)
 }
 
+FHN_prior3_ <- function(theta, draw) {
+    .Call(`_SMCABCFHN_FHN_prior3_`, theta, draw)
+}
+
 FHN_prior2_ <- function(theta, draw) {
     .Call(`_SMCABCFHN_FHN_prior2_`, theta, draw)
 }

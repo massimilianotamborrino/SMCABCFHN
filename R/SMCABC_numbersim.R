@@ -6,7 +6,7 @@ NULL
 #'@title SMCABC_numbersim
 #'@description SMC-ABC for time-varying thresholds computed as percentiles of ACCEPTED distances with a fixed budget (number of simulations)
 #'@param data observed data
-#'@param extra Any additional coefficients/vector of coefficients which may be need to simulate from the model
+#'@param extra Vector with time step delta, initial condition X0 and number of points N to simulate
 #'@param extra_summaries Any additional coefficients/vector needed to compute the summaries
 #'@param ABCthreshold Initial value for the threshold for the guided approach
 #'@param number_sim Total number of simulations, after which we stop the algorithm

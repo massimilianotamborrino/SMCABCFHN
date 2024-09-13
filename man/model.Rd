@@ -9,11 +9,11 @@ model(theta, extra)
 \arguments{
 \item{theta}{underlying parameter}
 
-\item{extra}{Any additional coefficients/vector of coefficients which may be need to simulate from the model}
+\item{extra}{Vector with time step delta, initial condition X0 and number of points N to simulate}
 }
 \value{
 Simulation of observations from all model, returned as matrix;
 }
 \description{
-Considered models
+Code for simulating using the splitting scheme from the FHN model
 }

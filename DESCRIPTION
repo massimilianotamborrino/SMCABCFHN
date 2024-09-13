@@ -1,7 +1,7 @@
 Package: SMCABCFHN
 Type: Package
 Title: SMC-ABC for the inference for the partially observed stochastic FHN model using invariant density and spectral density as summary statistics
-Version: 0.1.0
+Version: 0.2.0
 Author: M. Tamborrino
 Maintainer: M. Tamborrino <massimiliano.tamborrino@warwick.ac.uk>
 Description: SMC-ABC for the FHN model when only the membrane voltage is observed at discrete time measurements. Invariant density and spectral density as summary statistics.

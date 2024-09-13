@@ -21,7 +21,3 @@ FHN_model_ <- function(theta, delta, X0, N) {
     .Call(`_SMCABCFHN_FHN_model_`, theta, delta, X0, N)
 }
 
-FHN_model_check_ <- function(theta, delta, X0, N) {
-    .Call(`_SMCABCFHN_FHN_model_check_`, theta, delta, X0, N)
-}
-

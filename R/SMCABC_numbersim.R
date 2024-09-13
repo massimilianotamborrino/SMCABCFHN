@@ -88,7 +88,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
   write.table(normweights,file=sprintf('%s/normweights_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
 
 
-  ABCthresholdnew<- ABCthreshold
+  ABCthreshold_new<- ABCthreshold
 
   while (totnumproposals < number_sim){ # I stop when the acceptance rate goes below 1.5% for the 2nd consecutive time
     t <- t+1

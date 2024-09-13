@@ -73,20 +73,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// FHN_model_check_
-List FHN_model_check_(NumericVector theta, double delta, NumericVector X0, int N);
-RcppExport SEXP _SMCABCFHN_FHN_model_check_(SEXP thetaSEXP, SEXP deltaSEXP, SEXP X0SEXP, SEXP NSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type X0(X0SEXP);
-    Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    rcpp_result_gen = Rcpp::wrap(FHN_model_check_(theta, delta, X0, N));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SMCABCFHN_my_fun", (DL_FUNC) &_SMCABCFHN_my_fun, 3},
@@ -94,7 +80,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SMCABCFHN_FHN_prior2_", (DL_FUNC) &_SMCABCFHN_FHN_prior2_, 2},
     {"_SMCABCFHN_FHN_prior_", (DL_FUNC) &_SMCABCFHN_FHN_prior_, 2},
     {"_SMCABCFHN_FHN_model_", (DL_FUNC) &_SMCABCFHN_FHN_model_, 4},
-    {"_SMCABCFHN_FHN_model_check_", (DL_FUNC) &_SMCABCFHN_FHN_model_check_, 4},
     {NULL, NULL, 0}
 };
 

@@ -25,7 +25,7 @@ SMCABC_numbersim(
 \arguments{
 \item{data}{observed data}
 
-\item{extra}{Any additional coefficients/vector of coefficients which may be need to simulate from the model}
+\item{extra}{Vector with time step delta, initial condition X0 and number of points N to simulate}
 
 \item{extra_summaries}{Any additional coefficients/vector needed to compute the summaries}
 

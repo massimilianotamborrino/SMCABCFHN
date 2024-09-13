@@ -2,7 +2,6 @@
 
 export(FHN_abc_summaries)
 export(FHN_abc_summaries_X)
-export(FHNmodel)
 export(SMCABC_numbersim)
 export(abc_distance)
 export(abc_summaries)

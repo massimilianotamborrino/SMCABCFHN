@@ -44,7 +44,6 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
   #% initialization: t is the iteration counter
   t <- 1;
   numproposals0<-0
-  numproposalsneg<-0
   tic()   #% This will  count the seconds required to obtain the desired number of accepted particles for each iteration
   RES<-foreach(success = 1:numparticles,.combine='rbind',.packages='SMCABCFHN') %dopar% {
     distance<-ABCthreshold+1
@@ -88,53 +87,46 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
   write.table(numproposals,file=sprintf('%s/numproposals_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
   write.table(normweights,file=sprintf('%s/normweights_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
 
-  ABCthreshold_temp <- quantile(distance_accepted,alpha/100);
-  ABCthreshold_old <- ABCthreshold;
-  ABCthreshold_new <- min(ABCthreshold_temp,ABCthreshold_old)#
-  if (ABCthreshold_new == ABCthreshold_old)  ABCthreshold_new <- 0.95*ABCthreshold_new;
 
- if(sampling=="standard"){
-    C <- t(ABCdraws) - matrix(rep(normweights %*% t(ABCdraws), numparticles), nrow=numparticles,byrow=T);#   % subtract weighted mean                                                  % Remove mean (which is, also, weighted)
-    C <- t(C) %*% (C * matrix(rep(t(normweights),nfreepar),nrow=numparticles));       # % Weighted Covariance Matrix
-    C <- C / (1-sum(normweights^2)); #% the weighted covariance matrix
-    C <- 0.5 * (C + t(C));   #% ensure symmetry
-    Sigma <- 2*C;
-  }
-  else if (sampling=="olcm"){
-    cov_olcm <- matrix(0,nrow=nfreepar,ncol=nfreepar);
-    id_olcm <- which(distance_accepted < ABCthreshold_new);
-    N0 <- length(id_olcm);  #% number of particles that satisfy the newest threshold
-    if (N0==0) # % in this sampling there are no particles satisfying the criterion above. We must exit
-    { print('There are no particles satisfying the OLCM criterion. We must leave..')
-      return(3)}
-    weights_olcm <- weights[id_olcm];
-    normweights_olcm <- weights_olcm/sum(weights_olcm);
-    cov_olcm_all <- c();
-    for (ii in 1:numparticles)
-    {
-      for (jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii])%*%t(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii]);
-      cov_olcm <- (cov_olcm+t(cov_olcm))/2;
-      cov_olcm_all <- cbind(cov_olcm_all,cov_olcm);
-    }
-  }
-
-  samplingoriginal<-0
+  ABCthresholdnew<- ABCthreshold
 
   while (totnumproposals < number_sim){ # I stop when the acceptance rate goes below 1.5% for the 2nd consecutive time
     t <- t+1
-    weights_old <- weights;
-    if(sampling=='standard'){ABCdraws_old <- ABCdraws;
-    Sigma_old <- Sigma}
-    else if(sampling=='olcm'){ABCdraws_old <- ABCdraws;
-    #% now find the particles that would have been accepted (if any) under the NEW threshold
-    id_olcm <- which(distance_accepted < ABCthreshold_new);
-    N0 <- length(id_olcm);  #% number of particles that satisfy the newest threshold
-    if (N0==0) # % in this sampling there are no particles satisfying the criterion above. We must exit
-    { print('There are no particles satisfying the OLCM criterion. We must leave..')
-      return(4)}
- #   distance_accepted <-   matrix(0,nrow=1,ncol=numparticles); #% this is only for the olcm proposal
-    weights_olcm <- weights_old[id_olcm];
-    normweights_olcm <- weights_olcm/sum(weights_olcm);
+
+    ABCthreshold_temp <- quantile(distance_accepted,alpha/100);
+    ABCthreshold_old <- ABCthreshold_new;
+    ABCthreshold_new <- min(ABCthreshold_temp,ABCthreshold_old)#
+    if (ABCthreshold_new == ABCthreshold_old)  {ABCthreshold_new <- 0.95*ABCthreshold_new;
+    sprintf('Forced decrease of ABC threshold to: %f',ABCthreshold)}
+
+
+    if(sampling=="standard"){
+      C <- t(ABCdraws) - matrix(rep(normweights %*% t(ABCdraws), numparticles), nrow=numparticles,byrow=T);#   % subtract weighted mean                                                  % Remove mean (which is, also, weighted)
+      C <- t(C) %*% (C * matrix(rep(t(normweights),nfreepar),nrow=numparticles));       # % Weighted Covariance Matrix
+      C <- C / (1-sum(normweights^2)); #% the weighted covariance matrix
+      C <- 0.5 * (C + t(C));   #% ensure symmetry
+      Sigma <- 2*C;
+      write.table(Sigma,file=sprintf('%s/Sigma_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
+
+    }
+    else if (sampling=="olcm"){
+      cov_olcm <- matrix(0,nrow=nfreepar,ncol=nfreepar);
+      id_olcm <- which(distance_accepted < ABCthreshold_new);
+      N0 <- length(id_olcm);  #% number of particles that satisfy the newest threshold
+      if (N0==0) # % in this sampling there are no particles satisfying the criterion above. We must exit
+      { print('There are no particles satisfying the OLCM criterion. We must leave..')
+        return(3)}
+      weights_olcm <- weights[id_olcm];
+      normweights_olcm <- weights_olcm/sum(weights_olcm);
+      cov_olcm_all <- c();
+      for (ii in 1:numparticles)
+      {
+        for (jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii])%*%t(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii]);
+        cov_olcm <- (cov_olcm+t(cov_olcm))/2;
+        if(isposdef(cov_olcm)==0) cov_olcm<-nearPD(cov_olcm,base.matrix=TRUE)$mat
+        cov_olcm_all <- cbind(cov_olcm_all,cov_olcm);
+      }
+      write.table(cov_olcm_all,file=sprintf('%s/Sigma_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     }
 
     tic()
@@ -143,30 +135,23 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       distance<- ABCthreshold_new+1
       numproposals <- 0;
       numproposals0 <- 0;
+      numproposalsneg <- 0;
+      numproposalskappa <- 0;
       simsumm_all<- c();
       theta<-rep(0,nfreepar)
 
       while(distance>=ABCthreshold_new & (numproposals+totnumproposals)<number_sim){
-        numproposals <- numproposals +1;
-        if(sampling=='standard'){
-          index <- sample(1:length(normweights),size=1,prob=normweights);
-          theta <- rmvn(1,ABCdraws_old[,index],Sigma_old)
-        }
-        else if(sampling=='olcm'){
-          index <- sample(1:length(normweights),size=1,prob=normweights);
-          #          % id_olcm contains all the indeces of the particles from the previous generation that satisfy the
-          #         % current threshold. There are N0 of those.
-          cov_olcm <-matrix(0, nrow=nfreepar,ncol=nfreepar);
-          for(jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws_old[,id_olcm[jj]]-ABCdraws_old[,index])%*%t(ABCdraws_old[,id_olcm[jj]]-ABCdraws_old[,index]);
-          cov_olcm <- (cov_olcm+t(cov_olcm))/2;
-          if(isposdef(cov_olcm)==0) cov_olcm<-nearPD(cov_olcm,base.matrix=TRUE)$mat  # This IF statement is useful if the proposal_cov is not definite positive
-          #    % the above covariance is not "global" but is instead specific for the sampled particle
-          theta <- rmvn(1,ABCdraws_old[,index],cov_olcm)
-        }
+
+        index <- sample(1:length(normweights),size=1,prob=normweights);#needed to compute the mean of the proposal sampler
+
+        if(sampling=='standard') theta <- rmvn(1,ABCdraws[,index],Sigma)
+        else if(sampling=='olcm') theta <- rmvn(1,ABCdraws[,index],cov_olcm_all[,((index-1)*nfreepar+1):(index*nfreepar)])
         if(min(theta)<0) numproposalsneg<-numproposalsneg+1
+        else if(min(theta)>0 & theta[2]<=theta[1]/4) numproposalskappa<-numproposalskappa+1
         prior <- problemprior(theta,0,whichprior); #% evaluate prior
         if(prior==0) numproposals0<-numproposals0+1
-        if(prior!=0){
+        else {
+          numproposals <- numproposals +1;
           bigtheta <- theta
           simdata <- model(bigtheta,extra); #// simulate from the model
           simdata<- simdata[seq(1,length(simdata),by=subsamplingby)]
@@ -181,16 +166,16 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       #  simsumm_accepted[,success]<-  simsumm; TO GET
       if(sampling=='standard'){
         dens <-0;
-        for (ii in 1:numparticles) dens <- dens + weights_old[ii]*dmvn(theta,ABCdraws_old[,ii],Sigma_old);
+        for (ii in 1:numparticles) dens <- dens + weights[ii]*dmvn(theta,ABCdraws[,ii],Sigma);
       }
       else if(sampling=='olcm'){
         dens <-0;
-        for (ii in 1:numparticles) dens <- dens + weights_old[ii]*dmvn(theta,ABCdraws_old[,ii],cov_olcm_all[,((ii-1)*nfreepar+1):(ii*nfreepar)]);
+        for (ii in 1:numparticles) dens <- dens + weights[ii]*dmvn(theta,ABCdraws[,ii],cov_olcm_all[,((ii-1)*nfreepar+1):(ii*nfreepar)]);
       }
       #  weights[success] <- prior /dens; TO GET
       #  ABCdraws[,success] <- theta; TO GET
       if(dens==0) return(print('error'))
-      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg)
+      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg,numproposalskappa)
     }
     eval_time <- toc()
 
@@ -201,6 +186,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     weights<-matrix(as.numeric(unlist(RES2[,5])),ncol=numparticles);
     numproposals0<-sum(unlist(RES2[,6]))
     numproposalsneg<-sum(unlist(RES2[,7]))
+    numproposalskappa<-sum(unlist(RES2[,8]))
     rm(RES2)
 
     totnumproposals<- totnumproposals+numproposals
@@ -215,41 +201,10 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     write.table(numproposals,file=sprintf('%s/numproposals_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposals0,file=sprintf('%s/numproposals0_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposalsneg,file=sprintf('%s/numproposalsneg_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
+    write.table(numproposalskappa,file=sprintf('%s/numproposalskappa_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(normweights,file=sprintf('%s/normweights_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
 
-    ABCthreshold_temp <- quantile(distance_accepted,alpha/100);
-    ABCthreshold_old <- ABCthreshold_new;
-    ABCthreshold_new <- min(ABCthreshold_temp,ABCthreshold_old); #% ensure non-increasing thresholds
-    if (ABCthreshold_new == ABCthreshold_old) {ABCthreshold_new <- 0.95*ABCthreshold_new;
-    sprintf('Forced decrease of ABC threshold to: %f',ABCthreshold)
-    }
     if(totnumproposals >= number_sim) return(ABCdraws)
-
-    if(sampling=="standard"){
-      C <- t(ABCdraws) - matrix(rep(normweights %*% t(ABCdraws), numparticles), nrow=numparticles,byrow=T);#   % subtract weighted mean                                                  % Remove mean (which is, also, weighted)
-      C <- t(C) %*% (C * matrix(rep(t(normweights),nfreepar),nrow=numparticles));       # % Weighted Covariance Matrix
-      C <- C / (1-sum(normweights^2)); #% the weighted covariance matrix
-      C <- 0.5 * (C + t(C));   #% ensure symmetry
-      Sigma <- 2*C;
-    }
-    else if (sampling=="olcm"){
-      cov_olcm <- matrix(0,nrow=nfreepar,ncol=nfreepar);
-      id_olcm <- which(distance_accepted < ABCthreshold_new);
-      N0 <- length(id_olcm);  #% number of particles that satisfy the newest threshold
-      if (N0==0) # % in this sampling there are no particles satisfying the criterion above. We must exit
-      { print('There are no particles satisfying the OLCM criterion. We must leave..')
-        return(7)}
-      weights_olcm <- weights[id_olcm];
-      normweights_olcm <- weights_olcm/sum(weights_olcm);
-      cov_olcm_all <- c();
-      for (ii in 1:numparticles)
-      {
-        for (jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii])%*%t(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii]);
-        cov_olcm <- (cov_olcm+t(cov_olcm))/2;
-        cov_olcm_all <- cbind(cov_olcm_all,cov_olcm);
-      }
-    }
-
   }
   return(ABCdraws)
 }

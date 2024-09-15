@@ -137,6 +137,8 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       numproposals0 <- 0;
       numproposalsneg <- 0;
       numproposalskappa <- 0;
+      numproposalskappalarge <- 0;
+
       simsumm_all<- c();
       theta<-rep(0,nfreepar)
 
@@ -148,7 +150,9 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
         else if(sampling=='olcm') theta <- rmvn(1,ABCdraws[,index],cov_olcm_all[,((index-1)*nfreepar+1):(index*nfreepar)])
         if(min(theta)<0) numproposalsneg<-numproposalsneg+1
         else if(min(theta)>0 & theta[2]<=theta[1]/4) numproposalskappa<-numproposalskappa+1
-        prior <- problemprior(theta,0,whichprior); #% evaluate prior
+        if(whichprior=='unif' & theta[1]/4>6) numproposalskappalarge<-numproposalskappalarge+1
+        else{
+          prior <- problemprior(theta,0,whichprior); #% evaluate prior
         if(prior==0) numproposals0<-numproposals0+1
         else {
           numproposals <- numproposals +1;
@@ -159,7 +163,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
           xc <- (t(simsumm)-t(summobs)); #// compute
           distance <- abc_distance(type_sum,xc,summ_weights,we)
           simsumm_all <-  cbind(simsumm_all,simsumm);
-        }#
+        }}#
       }
       if(numproposals>=number_sim) {list(numproposals);stop(print('a particle got stucked'));}
       # Now distance<ABCthreshold
@@ -175,7 +179,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       #  weights[success] <- prior /dens; TO GET
       #  ABCdraws[,success] <- theta; TO GET
       if(dens==0) return(print('error'))
-      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg,numproposalskappa)
+      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg,numproposalskappa,numproposalskappalarge)
     }
     eval_time <- toc()
 
@@ -187,6 +191,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     numproposals0<-sum(unlist(RES2[,6]))
     numproposalsneg<-sum(unlist(RES2[,7]))
     numproposalskappa<-sum(unlist(RES2[,8]))
+    numproposalskappalarge<-sum(unlist(RES2[,9]))
     rm(RES2)
 
     totnumproposals<- totnumproposals+numproposals
@@ -202,6 +207,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     write.table(numproposals0,file=sprintf('%s/numproposals0_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposalsneg,file=sprintf('%s/numproposalsneg_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposalskappa,file=sprintf('%s/numproposalskappa_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
+    write.table(numproposalskappalarge,file=sprintf('%s/numproposalskappalarge_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(normweights,file=sprintf('%s/normweights_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
 
     if(totnumproposals >= number_sim) return(ABCdraws)

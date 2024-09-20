@@ -131,7 +131,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
 
     tic()
 
-    RES2<-foreach(success = 1:numparticles,.combine='rbind',.packages=c('SMCABCFHN','pracma')) %dopar% {
+    RES2<-foreach(success = 1:numparticles,.combine='rbind',.packages=c('SMCABCFHN')) %dopar% {
       distance<- ABCthreshold_new+1
       numproposals <- 0;
       numproposals0 <- 0;

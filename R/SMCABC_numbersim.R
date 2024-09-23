@@ -166,8 +166,6 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
         }}#
       }
       if(numproposals>=number_sim) {list(numproposals);stop(print('a particle got stucked'));}
-      # Now distance<ABCthreshold
-      #  simsumm_accepted[,success]<-  simsumm; TO GET
       if(sampling=='standard'){
         dens <-0;
         for (ii in 1:numparticles) dens <- dens + weights[ii]*dmvn(theta,ABCdraws[,ii],Sigma);
@@ -176,8 +174,6 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
         dens <-0;
         for (ii in 1:numparticles) dens <- dens + weights[ii]*dmvn(theta,ABCdraws[,ii],cov_olcm_all[,((ii-1)*nfreepar+1):(ii*nfreepar)]);
       }
-      #  weights[success] <- prior /dens; TO GET
-      #  ABCdraws[,success] <- theta; TO GET
       if(dens==0) return(print('error'))
       list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg,numproposalskappa,numproposalskappalarge)
     }

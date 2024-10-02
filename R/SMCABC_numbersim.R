@@ -123,7 +123,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       {
         for (jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii])%*%t(ABCdraws[,id_olcm[jj]]-ABCdraws[,ii]);
         cov_olcm <- (cov_olcm+t(cov_olcm))/2;
-        if(isposdef(cov_olcm)==0) cov_olcm<-nearPD(cov_olcm,base.matrix=TRUE)$mat
+      #  if(isposdef(cov_olcm)==0) cov_olcm<-nearPD(cov_olcm,base.matrix=TRUE)$mat
         cov_olcm_all <- cbind(cov_olcm_all,cov_olcm);
       }
       write.table(cov_olcm_all,file=sprintf('%s/Sigma_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
@@ -147,7 +147,13 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
         index <- sample(1:length(normweights),size=1,prob=normweights);#needed to compute the mean of the proposal sampler
 
         if(sampling=='standard') theta <- rmvn(1,ABCdraws[,index],Sigma)
-        else if(sampling=='olcm') theta <- rmvn(1,ABCdraws[,index],cov_olcm_all[,((index-1)*nfreepar+1):(index*nfreepar)])
+        else if(sampling=='olcm') {
+          cov_olcm <-matrix(0, nrow=nfreepar,ncol=nfreepar);
+          for(jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws_old[,id_olcm[jj]]-ABCdraws_old[,index])%*%t(ABCdraws_old[,id_olcm[jj]]-ABCdraws_old[,index]);
+          cov_olcm <- (cov_olcm+t(cov_olcm))/2;
+          if(isposdef(cov_olcm)==0) cov_olcm<-nearPD(cov_olcm,base.matrix=TRUE)$mat  # This IF statement is useful if the proposal_cov is not definite positive
+          #    % the above covariance is not "global" but is instead specific for the sampled particle
+          theta <- rmvn(1,ABCdraws[,index],cov_olcm)}
         if(min(theta)<0) numproposalsneg<-numproposalsneg+1
         else if(min(theta)>0 & theta[2]<=theta[1]/4) numproposalskappa<-numproposalskappa+1
         if(whichprior=='unif' & theta[1]/4>6) numproposalskappalarge<-numproposalskappalarge+1

@@ -9,9 +9,9 @@ Trajectories of the FHN model are simulated using the structure-preserving split
 The R-package is written and maintained by Massimiliano Tamborrino (firstname dot secondname at warwick.ac.uk).
 
 # What can you find in the package
-In this package, we provide the code for the SMC-ABC algorithm using Gaussian kernel proposal, either the canonical version ('standard') or its optimased version ('olcml'). We also accommodate the code for having both canonical ('canonical') and "model-based" ('model-based') summary statistics.
+In this package, we provide the code for the SMC-ABC algorithm using Gaussian kernel proposal, either the canonical version ('standard') or its optimased version ('olcml'). We also accommodate the code for having both canonical ('canonical') and "structure-based" ('structure-based') summary statistics.
 
-The main routine is "SMCABCFHN_numbersim.R", which performs SMC-ABC with automatically decreasing tolerance levels, and user-specified: 1) prior ('unif','lognormal','exp'); 2) sampler ('standard' or 'olcm'); 3) summary statistics ('canonical' or 'model-based'); 4) computational budget, i.e., total number of model simulations to run. 
+The main routine is "SMCABCFHN_numbersim.R", which performs SMC-ABC with automatically decreasing tolerance levels, and user-specified: 1) prior ('unif','lognormal','exp'); 2) sampler ('standard' or 'olcm'); 3) summary statistics ('canonical' or 'structure-based'); 4) computational budget, i.e., total number of model simulations to run. 
 
 # How to install the package
 * Tools/Install packages/ select the source folder
@@ -27,6 +27,8 @@ Output files: The input "folder" is the name of the folder where you want your r
 - evaltime_stageX_attemptY.txt: Number of seconds required to accept N draws at the given iteration and given attempt.
 - numproposals_stageX_attemptY.txt: Number of particles proposed (i.e. both the accepted and rejected), at the given iteration and attempt.
 - numproposals0_stageX_attemptY.txt: Number of particles drawn from the proposal sampler which have been immediately rejected as out of the prior support, at the given iteration and attempt.
+- numproposalskappa_stageX_attemptY.txt: Number of particles drawn from the proposal sampler which have been immediately rejected as the condition kappa>0 is not met.
+- numproposalsneg_stageX_attemptY.txt: Number of particles drawn from the proposal sampler which have been immediately rejected as being  negative.
 - weights_stageX_attemptY.txt: Vector of N normalised importance weights associated to each of the N accepted particles at the given iteration and at the given attempt.
 - ABCthreshold_stageX_attemptY.txt: Value of the ABC threshold used at the given iteration and attempt.
 

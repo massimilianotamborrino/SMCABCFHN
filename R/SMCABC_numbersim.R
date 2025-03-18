@@ -137,7 +137,6 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
       numproposals0 <- 0;
       numproposalsneg <- 0;
       numproposalskappa <- 0;
-      numproposalskappalarge <- 0;
 
       simsumm_all<- c();
       theta<-rep(0,nfreepar)
@@ -149,15 +148,13 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
         if(sampling=='standard') theta <- rmvn(1,ABCdraws[,index],Sigma)
         else if(sampling=='olcm') {
           cov_olcm <-matrix(0, nrow=nfreepar,ncol=nfreepar);
-          for(jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws_old[,id_olcm[jj]]-ABCdraws_old[,index])%*%t(ABCdraws_old[,id_olcm[jj]]-ABCdraws_old[,index]);
+          for(jj in 1:N0) cov_olcm <- cov_olcm + normweights_olcm[jj]*(ABCdraws[,id_olcm[jj]]-ABCdraws[,index])%*%t(ABCdraws[,id_olcm[jj]]-ABCdraws[,index]);
           cov_olcm <- (cov_olcm+t(cov_olcm))/2;
           if(isposdef(cov_olcm)==0) cov_olcm<-nearPD(cov_olcm,base.matrix=TRUE)$mat  # This IF statement is useful if the proposal_cov is not definite positive
           #    % the above covariance is not "global" but is instead specific for the sampled particle
           theta <- rmvn(1,ABCdraws[,index],cov_olcm)}
         if(min(theta)<0) numproposalsneg<-numproposalsneg+1
         else if(min(theta)>0 & theta[2]<=theta[1]/4) numproposalskappa<-numproposalskappa+1
-        if(whichprior=='unif' & theta[1]/4>6) numproposalskappalarge<-numproposalskappalarge+1
-        else{
           prior <- problemprior(theta,0,whichprior); #% evaluate prior
         if(prior==0) numproposals0<-numproposals0+1
         else {
@@ -169,7 +166,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
           xc <- (t(simsumm)-t(summobs)); #// compute
           distance <- abc_distance(type_sum,xc,summ_weights,we)
           simsumm_all <-  cbind(simsumm_all,simsumm);
-        }}#
+        }#
       }
       if(numproposals>=number_sim) {list(numproposals);stop(print('a particle got stucked'));}
       if(sampling=='standard'){
@@ -181,7 +178,7 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
         for (ii in 1:numparticles) dens <- dens + weights[ii]*dmvn(theta,ABCdraws[,ii],cov_olcm_all[,((ii-1)*nfreepar+1):(ii*nfreepar)]);
       }
       if(dens==0) return(print('error'))
-      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg,numproposalskappa,numproposalskappalarge)
+      list(numproposals,distance,theta,simsumm_all,prior/dens,numproposals0,numproposalsneg,numproposalskappa)
     }
     eval_time <- toc()
 
@@ -193,7 +190,6 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     numproposals0<-sum(unlist(RES2[,6]))
     numproposalsneg<-sum(unlist(RES2[,7]))
     numproposalskappa<-sum(unlist(RES2[,8]))
-    numproposalskappalarge<-sum(unlist(RES2[,9]))
     rm(RES2)
 
     totnumproposals<- totnumproposals+numproposals
@@ -209,7 +205,6 @@ SMCABC_numbersim<- function (data, extra, extra_summaries, ABCthreshold, number_
     write.table(numproposals0,file=sprintf('%s/numproposals0_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposalsneg,file=sprintf('%s/numproposalsneg_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(numproposalskappa,file=sprintf('%s/numproposalskappa_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
-    write.table(numproposalskappalarge,file=sprintf('%s/numproposalskappalarge_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
     write.table(normweights,file=sprintf('%s/normweights_stage%d_attempt%d.txt',folder,t,attempt),row.names = FALSE,col.names = FALSE)
 
     if(totnumproposals >= number_sim) return(ABCdraws)
